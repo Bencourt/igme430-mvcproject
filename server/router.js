@@ -1,6 +1,6 @@
 const controllers = require('./controllers');
 const mid = require('./middleware');
-//route the user to a given endpoint
+// route the user to a given endpoint
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
   app.get('/getRecipes', mid.requiresLogin, controllers.Recipe.getRecipes);

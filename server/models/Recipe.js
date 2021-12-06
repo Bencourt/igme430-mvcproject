@@ -11,7 +11,8 @@ const setTitle = (title) => _.escape(title).trim();
 const setIngredients = (ingredients) => _.escape(ingredients).trim();
 const setInstructions = (instructions) => _.escape(instructions).trim();
 
-//create a new schema for the recipes that contains information about the recipe title, ingredients, instructions, and account info
+// create a new schema for the recipes that contains information about the
+// recipe title, ingredients, instructions, and account info
 const RecipeMakerSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -53,7 +54,7 @@ RecipeMakerSchema.statics.toAPI = (doc) => ({
   createdData: doc.createdData,
 });
 
-//search the collection for recipes created by the account owner
+// search the collection for recipes created by the account owner
 RecipeMakerSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: converId(ownerId),
@@ -63,6 +64,6 @@ RecipeMakerSchema.statics.findByOwner = (ownerId, callback) => {
 };
 
 RecipeModel = mongoose.model('Recipe', RecipeMakerSchema);
-//expose the endpoints
+// expose the endpoints
 module.exports.RecipeModel = RecipeModel;
 module.exports.RecipeSchema = RecipeMakerSchema;

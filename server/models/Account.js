@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-//create the account model variables
+// create the account model variables
 let AccountModel = {};
 const iterations = 10000;
 const saltLength = 64;
 const keyLength = 64;
 
-//create a new schema for the account that contains username, salt, password, and created data
+// create a new schema for the account that contains username, salt, password, and created data
 const AccountSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -38,7 +38,7 @@ AccountSchema.statics.toAPI = (doc) => ({
   _id: doc._id,
 });
 
-//check to see if the given password is correct
+// check to see if the given password is correct
 const validatePassword = (doc, password, callback) => {
   const pass = doc.password;
 
@@ -50,7 +50,7 @@ const validatePassword = (doc, password, callback) => {
   });
 };
 
-//search the collection for the given username
+// search the collection for the given username
 AccountSchema.statics.findByUsername = (name, callback) => {
   const search = {
     username: name,
@@ -59,14 +59,14 @@ AccountSchema.statics.findByUsername = (name, callback) => {
   return AccountModel.findOne(search, callback);
 };
 
-//generate a hash for the given password
+// generate a hash for the given password
 AccountSchema.statics.generateHash = (password, callback) => {
   const salt = crypto.randomBytes(saltLength);
 
   crypto.pbkdf2(password, salt, iterations, keyLength, 'RSA-SHA512', (err, hash) => callback(salt, hash.toString('hex')));
 };
 
-//check if a given username and password match
+// check if a given username and password match
 AccountSchema.statics.authenticate = (username, password, callback) => {
   AccountModel.findByUsername(username, (err, doc) => {
     if (err) {
@@ -87,9 +87,8 @@ AccountSchema.statics.authenticate = (username, password, callback) => {
   });
 };
 
-
 AccountModel = mongoose.model('Account', AccountSchema);
 
-//expose the endpoints
+// expose the endpoints
 module.exports.AccountModel = AccountModel;
 module.exports.AccountSchema = AccountSchema;
