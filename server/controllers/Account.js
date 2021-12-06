@@ -39,7 +39,8 @@ const login = (request, response) => {
 };
 
 //Change password is having difficulties. 
-//on request, check if the username and password is a valid user, check if the new password is new, and update the password for the user
+//on request, check if the username and password is a valid user, 
+//check if the new password is new, and update the password for the user
 const changePassword = (request, response) => {
   const req = request;
   const res = response;
@@ -55,12 +56,12 @@ const changePassword = (request, response) => {
   }
 
   //check if the new password is new
-  if (req.body.pass == req.body.pass2) {
+  if (req.body.pass === req.body.pass2) {
     return res.status(400).json({ error: 'new password cannot be old password' });
   }
 
   //generate a new hash for the new password
-  return Account.AccountModel.generateHash(req.body.pass2, (salt, hash) => {
+  return Account.AccountModel.generateHash(req.body.pass2, (salt) => {
 
     //create a new account variable
     let newAccount;
@@ -80,6 +81,7 @@ const changePassword = (request, response) => {
       newAccount.salt = salt;
       newAccount.password = req.body.pass2;
       //call the update function to change the doc document to the new account information
+      //this is where I think the error in updating the password comes from
       const updatePromise = Account.AccountModel.update(doc, newAccount);
 
       updatePromise.then(() => {
@@ -87,8 +89,8 @@ const changePassword = (request, response) => {
         return res.json({ redirect: '/maker' });
       });
 
-      updatePromise.catch((err) => {
-        console.log(err);
+      updatePromise.catch((erro) => {
+        console.log(erro);
         return res.status(400).json({ error: 'An error occurred.' });
       });
     });
