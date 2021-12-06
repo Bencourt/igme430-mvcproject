@@ -13,11 +13,16 @@
 <body> 
   <nav><a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
     <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
+    <div class="navlink"><a id="changePasswordButton" href="/changePassword">Change password</a></div>
     <div class="navlink"><a id="signupButton" href="/signup">Sign up</a></div>
   </nav>
+  <section id="noodleImage">
+    <img id="noodleBowl" src="assets/img/noodleBowl.jpg" alt="bowl of noodles">
+    <h1 id="title">Recipe Maker!</h1>
+  </section>
   <section id="content"></section>
-  <div id="recipeMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage">Wrong username or password</span></h3><img id="recipe" src="assets/img/recipe.png" alt="recipe"/>
+  <div id="recipeMessage">
+    <h3><span id="errorMessage">Wrong username or password</span></h3>
   </div>
   <script src="/assets/loginBundle.js"></script>
 </body>

@@ -1,10 +1,11 @@
+//sends the POST request for the login
 const handleLogin = (e) => {
     e.preventDefault();
 
     $("#recipeMessage").animate({width:'hide'},350);
 
     if($("#user").val() == '' || $("#pass").val() == ''){
-        handleError("RAWR: Username or password is empty");
+        handleError("Username or password is empty");
         return false;
     }
 
@@ -15,18 +16,40 @@ const handleLogin = (e) => {
     return false;
 };
 
+//Sends the POST request for a password change
+const handlePasswordChange = (e) => {
+    e.preventDefault();
+
+    $("#recipeMessage").animate({width:'hide'},350);
+
+    if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == ''){
+        handleError("All fields are required");
+        return false;
+    }
+
+    if($("#pass").val() == $("#pass2").val()){
+        handleError("New password cannot be the same as old password");
+        return false;
+    }
+
+    sendAjax('POST', $("#changeForm").attr("action"), $("#changeForm").serialize(), redirect);
+
+    return false;
+};
+
+//handles the POST request for signup
 const handleSignup = (e) => {
     e.preventDefault();
 
     $("#recipeMessage").animate({width:'hide'},350);
 
     if($("#user").val() == '' || $("#pass").val() == ''){
-        handleError("RAWR: All fields are required");
+        handleError("All fields are required");
         return false;
     }
 
     if($("#pass").val() !== $("#pass2").val()){
-        handleError("RAWR: passwords do not match");
+        handleError("passwords do not match");
         return false;
     }
 
@@ -35,6 +58,7 @@ const handleSignup = (e) => {
     return false;
 };
 
+//react element for the login window
 const LoginWindow = (props) => {
     return (
         <div>
@@ -57,6 +81,32 @@ const LoginWindow = (props) => {
     );
 };
 
+//react element for the change password window
+const ChangePasswordWindow = (props) => {
+    return (
+        <div>
+        <h3 className="loginBlurb">Change your password:</h3>
+        <form id="changeForm" 
+            name="changeForm"
+            onSubmit = {handlePasswordChange}
+            action="/changePassword"
+            method="POST"
+            className="mainForm"
+            >
+            <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username" />
+            <label htmlFor="pass">Original Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password" />
+            <label htmlFor="pass2">New Password: </label>
+            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Change password and login" />
+        </form>
+        </div>
+    );
+};
+
+//react element for the signup window
 const SignupWindow = (props) => {
     return (
         <div>
@@ -81,6 +131,7 @@ const SignupWindow = (props) => {
     );
 };
 
+//renders the login window
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -88,6 +139,15 @@ const createLoginWindow = (csrf) => {
     );
 };
 
+//renders the changePassword window
+const createChangePasswordWindow = (csrf) => {
+    ReactDOM.render(
+        <ChangePasswordWindow csrf={csrf} />,
+        document.querySelector("#content")
+    );
+};
+
+//renders the signup window
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
         <SignupWindow csrf={csrf} />,
@@ -95,13 +155,21 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+//sets up the page
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
+    const changePasswordButton = document.querySelector("#changePasswordButton");
 
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         createSignupWindow(csrf);
+        return false;
+    });
+
+    changePasswordButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createChangePasswordWindow(csrf);
         return false;
     });
 
@@ -114,6 +182,7 @@ const setup = (csrf) => {
     createLoginWindow(csrf);
 }
 
+//gets the token
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);

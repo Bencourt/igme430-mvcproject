@@ -1,12 +1,8 @@
+//handle the recipe POST request
 const handleRecipe = (e) => {
     e.preventDefault();
 
     $("#recipeMessage").animate({width:'hide'},350);
-
-    if($("#ingredientInput").val() == '' || $("#instructionInput").val() == '') {
-        handleError("Rawr: all fields are required");
-        return false;
-    }
 
     sendAjax('POST', $("#recipeForm").attr("action"), $("#recipeForm").serialize(), function() {
         loadRecipesFromServer();
@@ -15,19 +11,7 @@ const handleRecipe = (e) => {
     return false;
 };
 
-
-
-const addIngredient = (e) => {
-    document.querySelector("#ingredients").innerHTML += `<li>${document.querySelector("#ingredientInput").value}</li>`
-    document.querySelector("#ingredientInput").value = "";
-
-}
-
-const addInstruction = (e) => {
-    document.querySelector("#instructions").innerHTML += `<li>${document.querySelector("#instructionInput").value}</li>`
-    document.querySelector("#instructionInput").value = "";
-}
-
+//react form for the recipe
 const RecipeForm = (props) => {
     return(
         <form id="recipeForm"
@@ -37,22 +21,19 @@ const RecipeForm = (props) => {
         method="POST"
         className = "recipeForm"
         >
-            <label htmlFor="ingInput">Ingredient: </label>
-            <ul className="ingredients">
-            </ul>
-            <input id="ingredientInput" type="text" name="ingInput" placeholder ="Ingredient"/>
-            <input className="addIngredient" type="button" onClick={addIngredient} value="Add Ingredient"/>
-            <label htmlFor="instInput">Instruction:</label>
-            <ul className="instructions">   
-            </ul>
-            <input id="instructionInput" type="text" name="instInput" placeholder="Instruction"/>
-            <input className="addInstruction" type="button" onClick={addInstruction} value="Add Instruction" />
+            <label htmlFor="recTitle">Recipe Title: </label>
+            <input id="recipeTitle" type="text" name="recTitle" placeholder ="title"/>
+            <label htmlFor="ingInput">Ingredients: </label>
+            <input id="ingredientInput" type="text" name="ingInput" placeholder ="Ingredients"/>
+            <label htmlFor="instInput">Instructions:</label>
+            <input id="instructionInput" type="text" name="instInput" placeholder="Instructions"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="makeRecipeSubmit" type="submit" value="Make Recipe"/>
         </form>
     );
 };
 
+//creates the react elements for the recipe list
 const RecipeList = function(props) {
     if(props.recipes.length == 0) {
         return(
@@ -65,9 +46,9 @@ const RecipeList = function(props) {
     const recipeNodes = props.recipes.map(function(recipe) {
         return (
             <div key={recipe._id} className="recipe">
-                <img src="/assets/img/recipeface.jpeg" alt="recipe face" className="recipeFace" />
-                <h3 className="recipeName">Name: {recipe.name} </h3>
-                <h3 className="recipeAge">Age: {recipe.age} </h3>
+                <h3 className="recipeTitle">Title: {recipe.title} </h3>
+                <h3 className="recipeIngredients">Ingredients: {recipe.ingredients} </h3>
+                <h3 className="recipeInstructions">Instructions: {recipe.instructions}</h3>
             </div>
         );
     });
@@ -79,6 +60,16 @@ const RecipeList = function(props) {
     );
 };
 
+//react element for placeholder advertisement elements
+const Advertisement = (props) => {
+    return (
+        <div className="advertisement">
+            <h3 className="advertText">This is an advertisement placeholder</h3>
+        </div>
+    );
+};
+
+//calls the GET request to load the recipes from the server
 const loadRecipesFromServer = () => {
     sendAjax('GET', '/getRecipes', null, (data) => {
         ReactDOM.render(
@@ -87,6 +78,7 @@ const loadRecipesFromServer = () => {
     });
 };
 
+//setup function renders the react elements and loads the recipes from the server
 const setup = function(csrf) {
     ReactDOM.render(
         <RecipeForm csrf={csrf} />, document.querySelector("#makeRecipe")
@@ -96,9 +88,14 @@ const setup = function(csrf) {
         <RecipeList recipes={[]} />, document.querySelector("#recipes")
     );
 
+    ReactDOM.render(
+        <Advertisement/>, document.querySelector("#adSpace")
+    );
+    
     loadRecipesFromServer();
 };
 
+//gets the token
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);

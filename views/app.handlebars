@@ -14,12 +14,31 @@
   <nav><a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
   </nav>
-  <section id="makeRecipe">
-  </section>
-  <section id="recipes">
-  </section>
-  <div id="recipeMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3><img id="recipe" src="assets/img/recipe.png" alt="recipe"/>
+  <div id="body">
+    <div id="makerSpace">
+      <div>
+      <h1 class="sectionLabel">Make a new recipe</h1>
+      <section id="makeRecipe">
+      </section>
+      </div>
+    </div>
+    <div>
+      <section id="adSpace">
+        <div className="advertisement">
+            <h3 className="advertText">This is an advertisement placeholder</h3>
+        </div>
+      </section>
+    </div>
+    <div id="recipeSpace">
+      <div>
+      <h1 class="sectionLabel">Your recipes</h1>
+      <section id="recipes">
+      </section>
+      </div>
+    </div>
+  </div>
+  <div id="recipeMessage">
+    <h3><span id="errorMessage"></span></h3>
   </div>
   <script src="/assets/bundle.js"></script>
 </body>

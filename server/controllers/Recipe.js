@@ -1,7 +1,9 @@
+//import the models
 const models = require('../models');
 
 const { Recipe } = models;
 
+//on request, render the maker page
 const makerPage = (req, res) => {
   Recipe.RecipeModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -13,14 +15,16 @@ const makerPage = (req, res) => {
   });
 };
 
+//on request, check if all the inputs are valid and create a new recipe from the recipe data
 const makeRecipe = (req, res) => {
-  if (!req.body.name || !req.body.age) {
-    return res.status(400).json({ error: 'both name and age are required' });
+  if (!req.body.ingInput || !req.body.instInput || !req.body.recTitle) {
+    return res.status(400).json({ error: 'All three fields are required' });
   }
 
   const recipeData = {
-    name: req.body.name,
-    age: req.body.age,
+    title: req.body.recTitle,
+    ingredients: req.body.ingInput,
+    instructions: req.body.instInput,
     owner: req.session.account._id,
   };
 
@@ -42,6 +46,7 @@ const makeRecipe = (req, res) => {
   return recipePromise;
 };
 
+//on request, get the recipes for the account fron the database
 const getRecipes = (request, response) => {
   const req = request;
   const res = response;
@@ -56,6 +61,7 @@ const getRecipes = (request, response) => {
   });
 };
 
+//expose the endpoints
 module.exports.makerPage = makerPage;
 module.exports.getRecipes = getRecipes;
 module.exports.make = makeRecipe;

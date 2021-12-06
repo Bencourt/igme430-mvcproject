@@ -1,31 +1,17 @@
 "use strict";
 
+//handle the recipe POST request
 var handleRecipe = function handleRecipe(e) {
   e.preventDefault();
   $("#recipeMessage").animate({
     width: 'hide'
   }, 350);
-
-  if ($("#ingredientInput").val() == '' || $("#instructionInput").val() == '') {
-    handleError("Rawr: all fields are required");
-    return false;
-  }
-
   sendAjax('POST', $("#recipeForm").attr("action"), $("#recipeForm").serialize(), function () {
     loadRecipesFromServer();
   });
   return false;
-};
+}; //react form for the recipe
 
-var addIngredient = function addIngredient(e) {
-  document.querySelector("#ingredients").innerHTML += "<li>".concat(document.querySelector("#ingredientInput").value, "</li>");
-  document.querySelector("#ingredientInput").value = "";
-};
-
-var addInstruction = function addInstruction(e) {
-  document.querySelector("#instructions").innerHTML += "<li>".concat(document.querySelector("#instructionInput").value, "</li>");
-  document.querySelector("#instructionInput").value = "";
-};
 
 var RecipeForm = function RecipeForm(props) {
   return /*#__PURE__*/React.createElement("form", {
@@ -36,33 +22,26 @@ var RecipeForm = function RecipeForm(props) {
     method: "POST",
     className: "recipeForm"
   }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "recTitle"
+  }, "Recipe Title: "), /*#__PURE__*/React.createElement("input", {
+    id: "recipeTitle",
+    type: "text",
+    name: "recTitle",
+    placeholder: "title"
+  }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "ingInput"
-  }, "Ingredient: "), /*#__PURE__*/React.createElement("ul", {
-    className: "ingredients"
-  }), /*#__PURE__*/React.createElement("input", {
+  }, "Ingredients: "), /*#__PURE__*/React.createElement("input", {
     id: "ingredientInput",
     type: "text",
     name: "ingInput",
-    placeholder: "Ingredient"
-  }), /*#__PURE__*/React.createElement("input", {
-    className: "addIngredient",
-    type: "button",
-    onClick: addIngredient,
-    value: "Add Ingredient"
+    placeholder: "Ingredients"
   }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "instInput"
-  }, "Instruction:"), /*#__PURE__*/React.createElement("ul", {
-    className: "instructions"
-  }), /*#__PURE__*/React.createElement("input", {
+  }, "Instructions:"), /*#__PURE__*/React.createElement("input", {
     id: "instructionInput",
     type: "text",
     name: "instInput",
-    placeholder: "Instruction"
-  }), /*#__PURE__*/React.createElement("input", {
-    className: "addInstruction",
-    type: "button",
-    onClick: addInstruction,
-    value: "Add Instruction"
+    placeholder: "Instructions"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
@@ -72,7 +51,8 @@ var RecipeForm = function RecipeForm(props) {
     type: "submit",
     value: "Make Recipe"
   }));
-};
+}; //creates the react elements for the recipe list
+
 
 var RecipeList = function RecipeList(props) {
   if (props.recipes.length == 0) {
@@ -87,20 +67,28 @@ var RecipeList = function RecipeList(props) {
     return /*#__PURE__*/React.createElement("div", {
       key: recipe._id,
       className: "recipe"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/recipeface.jpeg",
-      alt: "recipe face",
-      className: "recipeFace"
-    }), /*#__PURE__*/React.createElement("h3", {
-      className: "recipeName"
-    }, "Name: ", recipe.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "recipeAge"
-    }, "Age: ", recipe.age, " "));
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "recipeTitle"
+    }, "Title: ", recipe.title, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "recipeIngredients"
+    }, "Ingredients: ", recipe.ingredients, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "recipeInstructions"
+    }, "Instructions: ", recipe.instructions));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "recipeList"
   }, recipeNodes);
-};
+}; //react element for placeholder advertisement elements
+
+
+var Advertisement = function Advertisement(props) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "advertisement"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "advertText"
+  }, "This is an advertisement placeholder"));
+}; //calls the GET request to load the recipes from the server
+
 
 var loadRecipesFromServer = function loadRecipesFromServer() {
   sendAjax('GET', '/getRecipes', null, function (data) {
@@ -108,7 +96,8 @@ var loadRecipesFromServer = function loadRecipesFromServer() {
       recipes: data.recipes
     }), document.querySelector("#recipes"));
   });
-};
+}; //setup function renders the react elements and loads the recipes from the server
+
 
 var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(RecipeForm, {
@@ -117,8 +106,10 @@ var setup = function setup(csrf) {
   ReactDOM.render( /*#__PURE__*/React.createElement(RecipeList, {
     recipes: []
   }), document.querySelector("#recipes"));
+  ReactDOM.render( /*#__PURE__*/React.createElement(Advertisement, null), document.querySelector("#adSpace"));
   loadRecipesFromServer();
-};
+}; //gets the token
+
 
 var getToken = function getToken() {
   sendAjax('GET', '/getToken', null, function (result) {
@@ -131,19 +122,22 @@ $(document).ready(function () {
 });
 "use strict";
 
+//error handler helper function
 var handleError = function handleError(message) {
   $("#errorMessage").text(message);
   $("#recipeMessage").animate({
     width: 'toggle'
   }, 350);
-};
+}; //redirect helper function
+
 
 var redirect = function redirect(response) {
   $("#recipeMessage").animate({
     width: 'hide'
   }, 350);
   window.location = response.redirect;
-};
+}; //send AJAX helper function
+
 
 var sendAjax = function sendAjax(type, action, data, success) {
   $.ajax({

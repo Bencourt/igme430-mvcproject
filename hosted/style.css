@@ -15,6 +15,7 @@ html, body {
     padding-top: 5px;
     float:right;
     border-radius: 8px;
+    margin-right: 5px;
 }
 
 nav {
@@ -52,16 +53,15 @@ nav:nth-child(1) {
 
 .recipeForm {
     border: 2px solid #901600;
-    height: 35px;
     width: 80vw;
-    margin-top: 30px;
     margin: auto;
-    padding-top:10px;
+    margin-top: 30px;
+    padding:10px;
     background-color: #e72400;
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;
 }
 
@@ -93,13 +93,27 @@ nav:nth-child(1) {
 }
 
 .makeRecipeSubmit:hover {
-    transition: background-color 0.4s ease;
+    transition: background-color 0.2s ease;
     background-color: #901600;
 }
+
+#noodleBowl{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+#title
+{
+    font-size: 2.5em;
+    width: 300px;
+    margin: auto;
+}
+
 .loginBlurb {
     width: 400px;
     margin: 0 auto;
-    padding-top: 250px;
+    padding-top: 25px;
     font-size: 1.2em;
 }
 
@@ -187,8 +201,13 @@ nav:nth-child(1) {
 #errorMessage {
     font-size: 1.2em;
     font-weight: bold;
-    color: red;
+    color: black;
     font-style: italic;
+}
+
+.sectionLabel{
+    width: 500px;
+    margin-left: 10%;
 }
 
 #recipe {
@@ -203,15 +222,16 @@ nav:nth-child(1) {
 }
 
 #recipes {
-    width: 40%;
+    width: 80%;
     min-width: 400px;
-    border: 2px solid #e72400;
-    border-radius: 4px;
+    border: 0px solid #e72400;
+    border-radius: 0px;
     margin: 0 auto;
-    margin-top: 100px;
 }
 
 .recipe {
+    transition: background-color 0.4s ease;
+    transition: border-color 0.4s ease;
     width: 95%;
     margin: 0 auto;
     margin-top: 2px;
@@ -225,9 +245,9 @@ nav:nth-child(1) {
 }
 
 .recipe:hover {
-    transition: border-color 0.2s ease-out;
+    transition: border-color 0.4s ease;
     border-color: rgba(255,255,255, 0.8);
-    transition: background-color 2.6s ease-out;
+    transition: background-color 0.4s ease;
     background-color: #ff6d52;
 }
 
@@ -272,4 +292,11 @@ h3.recipeAge {
 
 .recipe:last-child {
     margin-bottom:10px;
+}
+
+.advertisement {
+    width: 100%;
+    height: 300px;
+    background-color: gray;
+    color: white;
 }
